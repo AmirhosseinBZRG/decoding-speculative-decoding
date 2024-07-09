@@ -1,5 +1,8 @@
 import torch
 import re
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy import stats
 
 # Function to read output from the output file and convert to a tensor
 def read_tensors_from_file(file_path):
@@ -19,10 +22,7 @@ def read_tensors_from_file(file_path):
 
 
 
-import torch
-import matplotlib.pyplot as plt
-import numpy as np
-from scipy import stats
+
 def compute_average_difference(tensors,confidence_level = 0.95):
     """
     Computes the average difference between consecutive tensors in a list.

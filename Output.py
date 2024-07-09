@@ -100,46 +100,4 @@ print(f"The number of prompts in the list is: {num_tensors}")
 print("Standard Deviation:",std_tokens_matched)
 print("confidence interval:",confidence_interval)
 
-import torch
-import matplotlib.pyplot as plt
-import numpy as np
-from scipy import stats
 
-# Convert the list of tensors to a single numpy array
-data = np.array([t.item() for t in avg_prompt if not torch.isnan(t)])
-
-# Calculate mean and standard deviation
-mean = 5.2672
-std_dev = 2.8402
-
-# Create the plot
-plt.figure(figsize=(10, 6))
-
-# Plot histogram
-plt.hist(data, bins=30, density=True, alpha=0.7, color='skyblue', edgecolor='black')
-
-# Plot the normal distribution curve
-xmin, xmax = plt.xlim()
-x = np.linspace(xmin, xmax, 100)
-p = (1 / (std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mean) / std_dev)**2)
-plt.plot(x, p, 'k', linewidth=2)
-
-# Add vertical lines for mean and standard deviation
-plt.axvline(mean, color='red', linestyle='dashed', linewidth=2, label=f'Mean: {mean:.2f}')
-plt.axvline(mean + std_dev, color='green', linestyle='dashed', linewidth=2, label=f'Mean + SD: {mean+std_dev:.2f}')
-plt.axvline(mean - std_dev, color='green', linestyle='dashed', linewidth=2, label=f'Mean - SD: {mean-std_dev:.2f}')
-
-# Customize the plot
-plt.title('Distribution of Average Tokens Matched per Prompt')
-plt.xlabel('Average Tokens Matched')
-plt.ylabel('Density')
-plt.legend()
-
-# Show the plot
-plt.grid(True, alpha=0.3)
-plt.tight_layout()
-plt.show()
-
-# Print mean and standard deviation
-print(f"Mean: {mean:.4f}")
-print(f"Standard Deviation: {std_dev:.4f}")

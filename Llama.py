@@ -182,6 +182,7 @@ def sync():
 
 
 if __name__ == '__main__':
+    
     import argparse
     from datautils import *
 
@@ -269,7 +270,7 @@ if __name__ == '__main__':
         model.eval()
 
     dataloader, testloader = get_loaders(
-        args.dataset, nsamples=args.nsamples, seed=args.seed, model=args.model, seqlen=model.seqlen
+        args.dataset, nsamples=args.nsamples, seed=args.seed, model=args.model, seqlen=2048
     )
 
     if args.wbits < 16 and not args.nearest:
@@ -277,27 +278,15 @@ if __name__ == '__main__':
         quantizers = opt_sequential(model, dataloader, DEV)
         print(time.time() - tick)
 
-    if args.benchmark:
-        gpus = [torch.device('cuda:%d' % i) for i in range(torch.cuda.device_count())]
-        if len(gpus) > 1:
-            opt_multigpu(model, gpus)
-        else:
-            model = model.to(DEV)
-        if args.benchmark:
-            input_ids = next(iter(dataloader))[0][:, :args.benchmark]
-            benchmark(model, input_ids, check=args.check)
-    if args.load:
-        exit()
+
+ 
 
     datasets = ['wikitext2', 'hellswag'] 
 
     for dataset in datasets: 
         dataloader, testloader = get_loaders(
-            dataset, seed=args.seed, model=args.model, seqlen=model.seqlen
+            dataset, seed=args.seed, model=args.model, seqlen=2048
         )
         print(dataset)
-        opt_eval(model, testloader, DEV)
+        eval(model, testloader, DEV)
 
-    if args.save:
-        opt_pack3(model, quantizers)
-        torch.save(model.state_dict(), args.save) 
